@@ -5,18 +5,18 @@
   --text-main: #1f2937;
   --label-color: #6b7280;
   --card-bg: #ffffff;
-  --card-shadow-light: 0 4px 12px rgba(58, 175, 159, 0.12);
+  --card-shadow-light: 0 4px 12px rgba(58, 66, 175, 0.12);
   --card-shadow-dark: 0 6px 24px rgba(0, 0, 0, 0.06);
   --border-color: #e5e7eb;
   --transition-fast: 0.25s ease-in-out;
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Roboto";
   margin: 0;
   background-color: var(--background);
   color: var(--text-main);
-  padding: 40px 20px;
+  padding: 0px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,36 +25,50 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+.center {
+  display: flex;
+  flex-direction: column;
+  margin: 30px auto;
+  background: #fdfdfd;
+  padding: 30px 20px 50px 20px;
+  border-radius: 10px;
+}
 .container {
   width: 100%;
   max-width: 900px;
-  border-radius: 3px;
   box-shadow: var(--card-shadow-light);
   overflow: hidden;
   background-color: var(--card-bg);
   user-select: none;
+  padding: 0px !important;
 }
-
+.header-text {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
 .header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1565c0;
+  background-color: var(--primary);
   padding: 10px 30px;
-  border-radius: 6px 6px 0 0;
   cursor: pointer;
-  box-shadow: inset 2px 2px 5px #6490c2, inset -2px -2px 5px #6490c2;
   position: relative;
   transition: all ease-in 0.2s;
 }
 .header-row.collapsed {
-  box-shadow: 2px 2px 5px #6490c2, inset -2px -2px 5px #6490c2;
   transition: all ease-in 0.2s;
-  border-radius: 6px;
+  border-bottom: 1px solid #135db3;
+}
+#toggleHeader1 {
+  border-radius: 3px 3px 0px 0px;
+}
+#toggleHeader6 {
+  border-radius: 0px 0px 3px 3px;
 }
 .header-row:hover {
-  background-color: #437fc4;
+  background-color: var(--primary-hover);
 }
 .header-row h2 {
   margin: 0;
@@ -89,18 +103,43 @@ body {
     box-shadow var(--transition-fast);
   user-select: none;
 }
-.header-row button:hover,
-.header-row button:focus-visible {
+.header-row button:hover {
   background-color: var(--primary-hover);
   box-shadow: 0 6px 14px rgb(44 143 132 / 0.5);
   outline: none;
 }
-.na-options label input[type="radio"]:checked {
-  outline: 2px solid #1565c0;
-  padding: 3px 10px;
-  border-radius: 5px;
-  font-weight: 600;
+
+.options .option-item label input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #1565c0;
+  position: relative;
+  cursor: pointer;
+  transition: all ease 0.1s;
+  margin-right: 2px;
 }
+
+.options .option-item label input[type="radio"]:checked {
+  background-color: #1565c0;
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Hover effect for radio button */
+input[type="radio"]:hover {
+  border-color: #437fc4; /* Border color on hover */
+}
+
+/* Focus effect for better accessibility */
+input[type="radio"]:focus-visible {
+  outline: 2px solid #437fc4; /* Focus outline color */
+  outline-offset: 2px;
+}
+
 .card {
   background: var(--card-bg);
   border-top: 1px solid var(--border-color);
@@ -108,6 +147,7 @@ body {
   padding: 20px 44px;
   transition: max-height 0.4s ease, opacity 0.4s ease;
   overflow: hidden;
+  border: none !important;
 }
 .card.hidden {
   max-height: 0;
@@ -123,12 +163,11 @@ body {
 .pr-label {
   font-size: 15px;
   color: #ffffff;
-  background-color: #1565c0;
+  background-color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 5px 10px;
   font-weight: 700;
-  font-family: "Segoe UI Semibold", Arial, sans-serif;
 }
 .pr-question-fatal {
   display: flex;
@@ -147,7 +186,7 @@ body {
   background-color: #fce4ec;
   padding: 3px 10px;
   border-radius: 5px;
-  display: none; /* initially hidden */
+  display: none;
 }
 .fatality.show {
   display: flex; /* show when applicable is clicked */
@@ -181,10 +220,11 @@ body {
   flex: 1 1 45%;
   min-width: 220px;
 }
-.my-5 {
+.sendBtn {
   display: flex;
   justify-content: end;
-  background-color: black;
+  margin-right: 20px !important;
+  margin-top: 20px;
 }
 
 @media (max-width: 640px) {
