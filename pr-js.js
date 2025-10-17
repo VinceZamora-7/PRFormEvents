@@ -1,24 +1,28 @@
 // Function to handle toggling the visibility of the fatality section
-function toggleFatalityVisibility() {
-  // Get the radio buttons for "Applicable" and "Not Applicable"
-  const applicableRadio = document.getElementById("applicable");
-  const fatalitySection = document.querySelector(".fatality");
+function toggleFatalityVisibility(event) {
+  const questionId = event.target.name.replace("q", "fatality"); // Get question number dynamically
+  const fatalitySection = document.getElementById(questionId); // Get fatality section based on question
 
-  // If "Applicable" is selected, show the fatality section
-  if (applicableRadio.checked) {
-    fatalitySection.classList.add("show");
-  } else {
-    fatalitySection.classList.remove("show");
+  if (fatalitySection) {
+    if (event.target.value === "Applicable") {
+      fatalitySection.classList.add("show");
+    } else {
+      fatalitySection.classList.remove("show");
+    }
   }
 }
 
-// Add event listeners to handle the change event of the radio buttons
-document.querySelectorAll('input[name="fav_language"]').forEach((radio) => {
+// Add event listeners for all the applicable and not applicable radio buttons dynamically
+document.querySelectorAll('input[name^="q"]').forEach((radio) => {
   radio.addEventListener("change", toggleFatalityVisibility);
 });
 
 // Call the toggleFatalityVisibility function on load to ensure the initial state is correct
-document.addEventListener("DOMContentLoaded", toggleFatalityVisibility);
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('input[name^="q"]').forEach((radio) => {
+    toggleFatalityVisibility({ target: radio });
+  });
+});
 
 // Set up the toggling functionality for each section
 function setupToggle(sectionNum) {
