@@ -1,0 +1,157 @@
+/* Body styling */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #007bff;
+}
+
+p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Search Form */
+.search-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.input-group {
+  display: flex;
+  max-width: 500px;
+  width: 100%;
+}
+
+.search-input {
+  padding: 15px;
+  border-radius: 8px 0 0 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  width: 80%;
+}
+
+.search-btn {
+  padding: 15px;
+  border-radius: 0 8px 8px 0;
+  border: 1px solid #ddd;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Feedback Card */
+.feedback-card {
+  background: #ffffff;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.feedback-card h3 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.feedback-card p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+}
+
+.feedback-card ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.feedback-card ul li {
+  font-size: 1rem;
+  background-color: #f1f4f9;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.images-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.images-gallery img {
+  max-width: 200px;
+  border-radius: 12px;
+}
+
+/* Feedback Table */
+.feedback-table {
+  margin-top: 30px;
+}
+
+.feedback-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.feedback-table th,
+.feedback-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.feedback-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.feedback-table tr:hover {
+  background-color: #f1f4f9;
+}
+
+.btn-view-feedback {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-view-feedback:hover {
+  background-color: #0056b3;
+}
