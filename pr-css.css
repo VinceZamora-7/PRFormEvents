@@ -201,6 +201,8 @@ input[type="radio"]:focus-visible {
 .fatality .fatal {
   color: red;
 }
+.fatality input[type="file"] {
+}
 .options {
   display: flex;
   gap: 20px;
