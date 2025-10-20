@@ -53,3 +53,41 @@ setupToggle(3);
 setupToggle(4);
 setupToggle(5);
 setupToggle(6);
+
+document
+  .getElementById("confirmProceedBtn")
+  .addEventListener("click", function () {
+    // Open the pr_feedback.php in a new tab
+    window.open("pr-feedback/pr_feedback.php", "_blank");
+  });
+
+// function sendEmail() {
+//   const maxQuestions = 80; // total questions
+//   let bodyText = "Peer Review Answers:\n\n";
+
+//   for (let i = 1; i <= maxQuestions; i++) {
+//     const questionElem = document.querySelector(
+//       `label[for="applicable${i}"], label[for="notApplicable${i}"]`
+//     );
+
+//     let questionText = `Q${i}: Question text not available`;
+
+//     const q = document.querySelector(`input[name="q${i}"]:checked`);
+//     const qAnswer = q ? q.value : "Not answered";
+
+//     bodyText += `*${questionText}*\nAnswer: ${qAnswer}\n`;
+
+//     if (qAnswer !== "Not Applicable") {
+//       const f = document.querySelector(`input[name="fatality${i}"]:checked`);
+//       const fAnswer = f ? f.value : "Not answered";
+//       bodyText += `Fatality ${i}: ${fAnswer}\n`;
+//     }
+
+//     bodyText += "\n"; // extra line break between questions
+//   }
+
+//   const subject = encodeURIComponent("Peer Review Submission");
+//   const body = encodeURIComponent(bodyText);
+
+//   window.location.href = `mailto:v-jopastoral@microsoft.com?subject=${subject}&body=${body}`;
+// }
