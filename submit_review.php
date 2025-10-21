@@ -1,4 +1,8 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // 1. DB Connection
 $mysqli = new mysqli('localhost', 'root', '', 'peer_review_db');
 
@@ -44,13 +48,19 @@ while ($row = $result->fetch_assoc()) {
 $next_pr_id = 'PRID' . str_pad($max_num + 1, 6, '0', STR_PAD_LEFT);
 
 // 5. Save to DB
+$task_name = $_POST['task_name'];
+$pr_name = $_POST['peer_reviewer_name'];
+$pr_email = $_POST['peer_reviewer_email'];
+$builder_name = $_POST['builder_name'];
+$builder_email = $_POST['builder_email'];
 $submitter_email = 'v-jopastoral@microsoft.com'; // hardcoded for now
 $answers_json = json_encode($answers);
 $images_json = json_encode($imagePaths);
 $status = 'Pending';
 
-$stmt = $mysqli->prepare("INSERT INTO pr_submissions (pr_id, submitter_email, answers, image_paths, status) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("sssss", $next_pr_id, $submitter_email, $answers_json, $images_json, $status);
+$stmt = $mysqli->prepare("INSERT INTO pr_submissions (pr_id, submitter_email, task_name, peer_reviewer_name, peer_reviewer_email, builder_name, builder_email, answers, image_paths, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssssssss", $next_pr_id, $submitter_email, $task_name, $pr_name, $pr_email, $builder_name, $builder_email, $answers_json, $images_json, $status);
+
 $stmt->execute();
 $pr_id = $next_pr_id;
 $stmt->close();
@@ -58,6 +68,8 @@ $mysqli->close();
 
 
 // 6. Redirect the user to the feedback page after saving
-header("Location: pr-feedback/pr_feedback.php?pr_id=$pr_id");
-exit;  // Ensure no further script execution occurs after the redirection
+header("Location: http://localhost/EVENTS/EVENT-PR/pr-feedback/pr_feedback.php?pr_id=$pr_id");
+
+exit;
+
 ?>
