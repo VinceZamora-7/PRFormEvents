@@ -42,6 +42,95 @@ body {
   user-select: none;
   padding: 0px !important;
 }
+.prInfo-div * {
+  box-sizing: border-box;
+}
+
+.prInfo-div {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px;
+  background-color: var(--primary);
+  border-radius: 20px 20px 0px 0px;
+  font-family: "Segoe UI", sans-serif;
+  color: #ffffff;
+}
+
+/* Task Name Section */
+.task-name {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-name label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.task-name input {
+  padding: 7px 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  box-shadow: inset 1px 3px 3px #ffffffbd, inset -4px -4px 3px #00000046;
+  outline: none;
+  transition: box-shadow 300ms ease-in, background-color 300ms ease;
+}
+.task-name input:focus {
+  box-shadow: inset -2px -2px 4px #ffffff,
+    inset 2px 2px 4px rgba(0, 0, 0, 0.356);
+  background-color: #e2daeb;
+  transition: box-shadow 300ms ease-in, background-color 300ms ease;
+}
+
+/* Peer Review Info Flex Layout */
+.prInfo {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.prInfo-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1 1 45%;
+}
+
+.input-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-label label {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.input-label input {
+  padding: 7px 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+  box-shadow: inset 1px 3px 3px #ffffffbd, inset -4px -4px 3px #00000046;
+  outline: none;
+  transition: box-shadow 300ms ease-in, background-color 300ms ease;
+}
+
+.input-label input:focus {
+  box-shadow: inset -2px -2px 4px #ffffff,
+    inset 2px 2px 4px rgba(0, 0, 0, 0.356);
+  background-color: #e2daeb;
+  transition: box-shadow 300ms ease-in, background-color 300ms ease;
+}
+
 .header-text {
   display: flex;
   gap: 10px;
@@ -59,13 +148,13 @@ body {
 }
 .header-row.collapsed {
   transition: all ease-in 0.2s;
-  border-bottom: 1px solid #135db3;
+  border-bottom: 1px solid #5b8fca;
 }
 #toggleHeader1 {
-  border-radius: 3px 3px 0px 0px;
+  border-top: 1px solid #5b8fca;
 }
 #toggleHeader6 {
-  border-radius: 0px 0px 3px 3px;
+  border-radius: 0px 0px 20px 20px;
 }
 .header-row:hover {
   background-color: var(--primary-hover);
@@ -121,6 +210,9 @@ body {
   cursor: pointer;
   transition: all ease 0.1s;
   margin-right: 2px;
+}
+.option-item label span {
+  margin-left: 5px;
 }
 
 .options .option-item label input[type="radio"]:checked {
@@ -181,12 +273,14 @@ input[type="radio"]:focus-visible {
 .na-options {
   display: flex;
   gap: 20px;
+  flex-grow: 3;
 }
 .fatality {
   background-color: #fce4ec;
   padding: 3px 10px;
   border-radius: 5px;
   display: none;
+  margin-right: 50px;
 }
 .fatality.show {
   display: flex; /* show when applicable is clicked */
@@ -194,21 +288,58 @@ input[type="radio"]:focus-visible {
   align-items: center;
   font-weight: 600;
 }
-
+.proof-remarks {
+  display: flex;
+  gap: 20px;
+  padding: 10px 15px;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 12px;
+  display: none;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+}
+.proof-remarks.show {
+  display: flex;
+}
+.input-container {
+  flex-grow: 4;
+  position: relative;
+}
+.input-container .label {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  color: #ccc;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.input-container input[type="textarea"]:focus ~ .label,
+.input-container input[type="text"]:valid ~ .label {
+  position: absolute;
+  top: -15px;
+  left: 5px;
+  color: #000000;
+}
+.input-container input[type="textarea"] {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  outline: none;
+  width: 100%;
+  height: 25px;
+}
 .fatality .non-fatal {
   color: rgb(255, 102, 0);
 }
 .fatality .fatal {
   color: red;
 }
-.fatality input[type="file"] {
-}
 .options {
   display: flex;
   gap: 20px;
-  padding: 0px 10px 15px 15px;
+  padding: 0px 10px 10px 15px;
   justify-content: space-between;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 2px solid #f2f2f2;
 }
 .options.no-fatality {
   justify-content: flex-start;
@@ -227,6 +358,20 @@ input[type="radio"]:focus-visible {
   justify-content: end;
   margin-right: 20px !important;
   margin-top: 20px;
+}
+@media (max-width: 767px) {
+  .na-options {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .fatality.show {
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+  }
+  .proof-remarks.show {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 640px) {
