@@ -67,7 +67,10 @@ $mysqli->close();
             <!-- Display Feedback Card -->
             <div class="feedback-card">
                 <h3>PR Feedback #<?= htmlspecialchars($feedback['pr_id']) ?></h3>
-                <p><strong>Submitted by:</strong> <?= htmlspecialchars($feedback['submitter_email']) ?></p>
+                <p><strong>Task Name:</strong> <?= htmlspecialchars($feedback['task_name']) ?></p>
+                <p><strong>Peer Reviewer:</strong> <?= htmlspecialchars($feedback['peer_reviewer_name']) ?> (<?= htmlspecialchars($feedback['peer_reviewer_email']) ?>)</p>
+                <p><strong>Builder:</strong> <?= htmlspecialchars($feedback['builder_name']) ?> (<?= htmlspecialchars($feedback['builder_email']) ?>)</p>
+
                 <p><strong>Date:</strong> <?= htmlspecialchars($feedback['submission_date']) ?></p>
                 <p><strong>Status:</strong> <?= htmlspecialchars($feedback['status']) ?></p>
 
