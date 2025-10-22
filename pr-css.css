@@ -1,42 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 :root {
-  --primary: #1565c0;
-  --primary-hover: #437fc4;
-  --background: #f9fbfc;
-  --text-main: #1f2937;
+  --primary: #547792;
+  --background: #213448;
+  --specialBG: #ecefca;
+  --focus: #94b4c1;
+  --text-main: #ecefca;
+  --text-secondary: #17252a;
   --label-color: #6b7280;
-  --card-bg: #ffffff;
-  --card-shadow-light: 0 4px 12px rgba(58, 66, 175, 0.12);
-  --card-shadow-dark: 0 6px 24px rgba(0, 0, 0, 0.06);
-  --border-color: #e5e7eb;
   --transition-fast: 0.25s ease-in-out;
 }
-
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 body {
   font-family: "Roboto";
-  margin: 0;
-  background-color: var(--background);
+  background-color: var(--specialBG) !important;
   color: var(--text-main);
-  padding: 0px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+body * {
+  font-family: "Montserrat", sans-serif;
 }
 .center {
   display: flex;
   flex-direction: column;
   margin: 30px auto;
-  background: #fdfdfd;
-  padding: 30px 20px 50px 20px;
+  padding: 0px 20px 50px 20px;
   border-radius: 10px;
 }
 .container {
   width: 100%;
   max-width: 900px;
-  box-shadow: var(--card-shadow-light);
   overflow: hidden;
   background-color: var(--card-bg);
   user-select: none;
@@ -54,7 +56,7 @@ body {
   background-color: var(--primary);
   border-radius: 20px 20px 0px 0px;
   font-family: "Segoe UI", sans-serif;
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 /* Task Name Section */
@@ -67,14 +69,14 @@ body {
 .task-name label {
   font-weight: 600;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 .task-name input {
   padding: 7px 10px;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 50px;
   width: 100%;
   box-shadow: inset 1px 3px 3px #ffffffbd, inset -4px -4px 3px #00000046;
   outline: none;
@@ -83,7 +85,7 @@ body {
 .task-name input:focus {
   box-shadow: inset -2px -2px 4px #ffffff,
     inset 2px 2px 4px rgba(0, 0, 0, 0.356);
-  background-color: #e2daeb;
+  background-color: var(--focus);
   transition: box-shadow 300ms ease-in, background-color 300ms ease;
 }
 
@@ -110,14 +112,14 @@ body {
 
 .input-label label {
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 .input-label input {
   padding: 7px 10px;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 50px;
   transition: border-color 0.3s;
   box-shadow: inset 1px 3px 3px #ffffffbd, inset -4px -4px 3px #00000046;
   outline: none;
@@ -127,20 +129,23 @@ body {
 .input-label input:focus {
   box-shadow: inset -2px -2px 4px #ffffff,
     inset 2px 2px 4px rgba(0, 0, 0, 0.356);
-  background-color: #e2daeb;
+  background-color: var(--focus);
   transition: box-shadow 300ms ease-in, background-color 300ms ease;
 }
 
 .header-text {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  background-color: var(--background);
+  width: 100%;
+  color: var(--text-main);
+  padding: 20px;
+  text-align: center;
 }
 .header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--primary);
+  color: var(--text-main);
   padding: 10px 30px;
   cursor: pointer;
   position: relative;
@@ -148,28 +153,28 @@ body {
 }
 .header-row.collapsed {
   transition: all ease-in 0.2s;
-  border-bottom: 1px solid #5b8fca;
+  border-bottom: 1px solid var(--background);
 }
 #toggleHeader1 {
-  border-top: 1px solid #5b8fca;
+  border-top: 1px solid var(--background);
 }
 #toggleHeader6 {
   border-radius: 0px 0px 20px 20px;
 }
 .header-row:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--focus);
 }
 .header-row h2 {
   margin: 0;
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: #ffffff;
+  color: var(--text-main);
 }
 .header-row::after {
   content: "▼";
   font-size: 18px;
-  color: #ffffff;
+  color: var(--text-main);
   transition: transform var(--transition-fast);
   user-select: none;
   position: absolute;
@@ -181,7 +186,7 @@ body {
 
 .header-row button {
   background-color: var(--primary);
-  color: white;
+  color: var(--text-main);
   border: none;
   padding: 10px 22px;
   font-size: 14px;
@@ -193,7 +198,7 @@ body {
   user-select: none;
 }
 .header-row button:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--focus);
   box-shadow: 0 6px 14px rgb(44 143 132 / 0.5);
   outline: none;
 }
@@ -223,12 +228,12 @@ body {
 
 /* Hover effect for radio button */
 input[type="radio"]:hover {
-  border-color: #437fc4; /* Border color on hover */
+  border-color: var(--focus); /* Border color on hover */
 }
 
 /* Focus effect for better accessibility */
 input[type="radio"]:focus-visible {
-  outline: 2px solid #437fc4; /* Focus outline color */
+  outline: 2px solid var(--focus); /* Focus outline color */
   outline-offset: 2px;
 }
 
@@ -236,7 +241,7 @@ input[type="radio"]:focus-visible {
   background: var(--card-bg);
   border-top: 1px solid var(--border-color);
   box-shadow: var(--card-shadow-dark);
-  padding: 20px 44px;
+  padding: 20px 30px;
   transition: max-height 0.4s ease, opacity 0.4s ease;
   overflow: hidden;
   border: none !important;
@@ -254,7 +259,7 @@ input[type="radio"]:focus-visible {
 }
 .pr-label {
   font-size: 15px;
-  color: #ffffff;
+  color: var(--text-main);
   background-color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -267,7 +272,7 @@ input[type="radio"]:focus-visible {
   font-size: 15px;
   line-height: 1.65;
   padding: 5px 10px;
-  color: var(--text-main);
+  color: var(--text-secondary);
   font-weight: 600;
 }
 .na-options {
@@ -309,7 +314,7 @@ input[type="radio"]:focus-visible {
   position: absolute;
   top: 0;
   left: 5px;
-  color: #ccc;
+  color: var(--text-main);
   transition: all 0.3s ease;
   pointer-events: none;
 }
@@ -337,7 +342,7 @@ input[type="radio"]:focus-visible {
 .options {
   display: flex;
   gap: 20px;
-  padding: 0px 10px 10px 15px;
+  padding: 10px 10px 10px 15px;
   justify-content: space-between;
   border-bottom: 2px solid #f2f2f2;
 }
