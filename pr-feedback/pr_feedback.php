@@ -1,4 +1,8 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // DB Connection
 $mysqli = new mysqli('localhost', 'root', '', 'peer_review_db');
 
@@ -18,6 +22,15 @@ if ($pr_id) {
     $result = $stmt->get_result();
     $feedback = $result->fetch_assoc();
     $stmt->close();
+
+    // Decode the answers and questions only if they are not NULL
+    $answers = !is_null($feedback['answers']) ? json_decode($feedback['answers'], true) : [];
+    $questions = !is_null($feedback['questions']) ? json_decode($feedback['questions'], true) : [];
+
+    // Fetch questions for reference (this will be used if answers need to be looped)
+    $query_questions = "SELECT * FROM questions";
+    $questions_result = $mysqli->query($query_questions);
+
 } else {
     // If no PRID is provided, fetch all feedback
     $stmt = $mysqli->prepare("SELECT * FROM pr_submissions ORDER BY submission_date DESC");
@@ -49,7 +62,6 @@ $mysqli->close();
 
     <!-- Conditionally display the Back button -->
     <?php if ($pr_id): ?>
-        <!-- Only show this button if a specific PR feedback is being viewed -->
         <a href="pr_feedback.php" class="btn btn-secondary mb-4">Back to All Feedback</a>
     <?php endif; ?>
 
@@ -66,37 +78,81 @@ $mysqli->close();
         <?php if ($feedback): ?>
             <!-- Display Feedback Card -->
             <div class="feedback-card">
-                <h3>PR Feedback #<?= htmlspecialchars($feedback['pr_id']) ?></h3>
-                <p><strong>Task Name:</strong> <?= htmlspecialchars($feedback['task_name']) ?></p>
-                <p><strong>Peer Reviewer:</strong> <?= htmlspecialchars($feedback['peer_reviewer_name']) ?> (<?= htmlspecialchars($feedback['peer_reviewer_email']) ?>)</p>
-                <p><strong>Builder:</strong> <?= htmlspecialchars($feedback['builder_name']) ?> (<?= htmlspecialchars($feedback['builder_email']) ?>)</p>
+                <div class="taskInfo">
+                    <h3><strong>Task Name:</strong> <?= htmlspecialchars($feedback['task_name']) ?></h3>
+                    <p><strong><?= htmlspecialchars($feedback['pr_id']) ?></strong></p>
+                    <p><strong>Peer Reviewer:</strong> <?= htmlspecialchars($feedback['peer_reviewer_name']) ?> (<?= htmlspecialchars($feedback['peer_reviewer_email']) ?>)</p>
+                    <p><strong>Builder:</strong> <?= htmlspecialchars($feedback['builder_name']) ?> (<?= htmlspecialchars($feedback['builder_email']) ?>)</p>
+                    <p><strong>Date:</strong> <?= htmlspecialchars($feedback['submission_date']) ?></p>
+                    <p><strong>Status:</strong> <?= htmlspecialchars($feedback['status']) ?></p>
+                </div>
 
-                <p><strong>Date:</strong> <?= htmlspecialchars($feedback['submission_date']) ?></p>
-                <p><strong>Status:</strong> <?= htmlspecialchars($feedback['status']) ?></p>
-
-                <h4>Answers:</h4>
+                <!-- Questions and Answers Section -->
+                <h4>Feedback</h4>
                 <ul>
-                    <?php
-                    $answers = json_decode($feedback['answers'], true);
-                    foreach ($answers as $question => $answer) {
-                        echo "<li><strong>$question:</strong> " . htmlspecialchars($answer) . "</li>";
-                    }
+                    <?php 
+                        // Loop through each question and display the corresponding answer
+                        while ($question = $questions_result->fetch_assoc()) {
+                            $question_text = $question['question_text'];
+                            $question_id = $question['question_id'];
+                            
+                            // Construct the key to fetch the answer from the decoded answers
+                            $answer_key = 'q' . $question_id;
+                            $answer = isset($answers[$answer_key]) && !empty($answers[$answer_key]) ? $answers[$answer_key] : null;
+                            
+                            // Display the question and answer only if the answer exists and is not 'Not Applicable'
+                            if ($answer && strtolower($answer) !== 'not applicable') {
+                                echo "<li><strong>" . htmlspecialchars($question_text) . "</strong><br>";
+                                echo "<strong>Answer:</strong> " . htmlspecialchars($answer);
+                                
+                                // Check if the answer is "Applicable" and display Fatality and Remarks options
+                                if (strtolower($answer) === "applicable") {
+                                    // Display Fatality Status
+                                    $fatality = isset($answers['fatality_' . $question_id]) ? $answers['fatality_' . $question_id] : 'Not specified';
+                                    echo "<br><strong>Fatality:</strong> " . htmlspecialchars($fatality);
+
+                                    // Display Remarks
+                                    $remarks = isset($answers['remarks_' . $question_id]) ? $answers['remarks_' . $question_id] : 'No remarks provided';
+                                    echo "<br><strong>Remarks:</strong> " . htmlspecialchars($remarks);
+                                }
+                                
+                                // Fetch and display associated images for this question (if available)
+                                echo "<br><strong>Proof:</strong><br>";
+                                $images = isset($feedback['image_paths']) ? json_decode($feedback['image_paths'], true) : [];
+                                if ($images) {
+                                    foreach ($images as $image) {
+                                        echo "<img src='uploads/$image' class='img-thumbnail' alt='Uploaded Image' />";
+                                    }
+                                } else {
+                                    echo "<p>No images uploaded.</p>";
+                                }
+                                
+                                echo "</li><hr>";
+                            }
+                        }
                     ?>
                 </ul>
-
-                <h4>Uploaded Images:</h4>
-                <div class="images-gallery">
-                    <?php
-                    $images = json_decode($feedback['image_paths'], true);
-                    if ($images) {
-                        foreach ($images as $image) {
-                            echo "<img src='uploads/$image' class='img-thumbnail' />";
-                        }
-                    } else {
-                        echo "<p>No images uploaded.</p>";
-                    }
-                    ?>
-                </div>
+                <?php if ($feedback['status'] !== 'Completed'): ?>
+                    <div class="action">
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                            id="appeal"
+                        >
+                            Appeal
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            id="accept"
+                        >
+                            Accept
+                        </button>
+                        <button id="sendEmailBtn" class="btn btn-primary">
+                            <i class="bi bi-send"></i>Send Email
+                        </button>
+                    </div>
+                <?php endif; ?>
             </div>
         <?php else: ?>
             <div class="alert alert-warning">No feedback found for PRID <?= htmlspecialchars($pr_id) ?>.</div>
@@ -105,7 +161,7 @@ $mysqli->close();
         <!-- Display all PR Feedbacks if no PRID is provided -->
         <div class="feedback-table">
             <h3>All PR Feedbacks</h3>
-            <table>
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>PRID</th>
@@ -134,7 +190,62 @@ $mysqli->close();
 
 </div>
 
-<script src="pr_feedback.js"></script>
+<script>
+document.getElementById('sendEmailBtn').addEventListener('click', function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const prId = urlParams.get("pr_id");
+
+  const taskName = <?= json_encode($feedback['task_name'] ?? '') ?>;
+  const builderEmail = <?= json_encode($feedback['builder_email'] ?? '') ?>;
+
+  if (!prId || !taskName || !builderEmail) {
+    alert("Missing required fields.");
+    return;
+  }
+
+  let bodyText =
+    `Peer Review Answers:\n\n` +
+    `Hope you're doing well!\n\n` +
+    `Task Name: ${taskName}\n\n` +
+    `I've noticed that there are some errors\n` +
+    `For reference, here is the PRID: ${prId}\n\n` +
+    `Here is the link to the feedback page: http://localhost/EVENTS/EVENT-PR/pr-feedback/pr_feedback.php?pr_id=${prId}\n\n` +
+    `Thank you so much!`;
+
+  const subject = encodeURIComponent(`PR Feedback: ${taskName}`);
+  const body = encodeURIComponent(bodyText);
+  const email = encodeURIComponent(builderEmail);
+
+  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+});
+
+document.getElementById('accept').addEventListener('click', function () {
+  const prId = new URLSearchParams(window.location.search).get("pr_id");
+
+  if (!prId) {
+    alert("PRID is missing.");
+    return;
+  }
+
+  // Send an AJAX request to update the status in the database
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', 'update_status.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // On success, reload the page or update the status on the page
+      document.querySelector('p strong').textContent = 'Completed'; // Update the status text on the page
+    } else {
+      alert("Failed to update the status.");
+    }
+  };
+
+  xhr.send('pr_id=' + encodeURIComponent(prId) + '&status=Completed');
+});
+</script>
+
+
 
 </body>
 </html>
