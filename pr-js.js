@@ -667,23 +667,29 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // EMAILING THE LINK - (Open Outlook with a pre-filled email)
-function sendEmail(prId, builderEmail, taskName) {
-  let bodyText =
-    `Peer Review Answers:\n\n` +
-    `Hope you're doing well!\n\n` +
-    `Task Name: ${taskName}\n\n` +
-    `I've noticed that there are some errors\n` +
-    `For reference, here is the PRID: ${prId}\n\n` +
-    `Here is the link to the feedback page: http://localhost/EVENTS/EVENT-PR/pr-feedback/pr_feedback.php?pr_id=${prId}\n\n` +
-    `Thank you so much!`;
+// function sendEmail(prId, builderEmail, taskName) {
+//   console.log(prId, builderEmail, taskName); // Check the values being passed
 
-  const subject = encodeURIComponent(`PR Feedback: ${taskName}`);
-  const body = encodeURIComponent(bodyText);
-  const email = encodeURIComponent(builderEmail);
+//   if (!prId || !builderEmail || !taskName) {
+//     alert("Missing required fields: PR ID, Task Name, or Builder Email.");
+//     return;
+//   }
 
-  // Opens the default email client with dynamic recipient and subject
-  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-}
+//   let bodyText =
+//     `Peer Review Answers:\n\n` +
+//     `Hope you're doing well!\n\n` +
+//     `Task Name: ${taskName}\n\n` +
+//     `I've noticed that there are some errors\n` +
+//     `For reference, here is the PRID: ${prId}\n\n` +
+//     `Here is the link to the feedback page: http://localhost/EVENTS/EVENT-PR/pr-feedback/pr_feedback.php?pr_id=${prId}\n\n` +
+//     `Thank you so much!`;
+
+//   const subject = encodeURIComponent(`PR Feedback: ${taskName}`);
+//   const body = encodeURIComponent(bodyText);
+//   const email = encodeURIComponent(builderEmail);
+
+//   window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+// }
 
 document
   .getElementById("confirmProceedBtn")
@@ -702,46 +708,4 @@ document
       document.getElementById("confirmationModal")
     );
     modal.hide();
-
-    // // After submitting the form, get the PRID and redirect to the feedback page
-    // const prId = document.getElementById("taskName").value; // Get PRID value
-
-    // if (prId) {
-    //   // Redirect to the PRID page after form submission
-    //   window.location.href = `http://localhost/EVENTS/EVENT-PR/pr-feedback/pr_feedback.php?pr_id=${prId}`;
-    // } else {
-    //   console.error("PRID not found!");
-    // }
   });
-
-// // EMAILING THE FEEDBACK ITSELF
-// function sendEmail() {
-//   const maxQuestions = 80; // total questions
-//   let bodyText = "Peer Review Answers:\n\n";
-
-//   for (let i = 1; i <= maxQuestions; i++) {
-//     const questionElem = document.querySelector(
-//       `label[for="applicable${i}"], label[for="notApplicable${i}"]`
-//     );
-
-//     let questionText = `Q${i}: Question text not available`;
-
-//     const q = document.querySelector(`input[name="q${i}"]:checked`);
-//     const qAnswer = q ? q.value : "Not answered";
-
-//     bodyText += `*${questionText}*\nAnswer: ${qAnswer}\n`;
-
-//     if (qAnswer !== "Not Applicable") {
-//       const f = document.querySelector(`input[name="fatality${i}"]:checked`);
-//       const fAnswer = f ? f.value : "Not answered";
-//       bodyText += `Fatality ${i}: ${fAnswer}\n`;
-//     }
-
-//     bodyText += "\n"; // extra line break between questions
-//   }
-
-//   const subject = encodeURIComponent("Peer Review Submission");
-//   const body = encodeURIComponent(bodyText);
-
-//   window.location.href = `mailto:v-jopastoral@microsoft.com?subject=${subject}&body=${body}`;
-// }
