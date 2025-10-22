@@ -16,15 +16,15 @@
     <link rel="icon" href="img/icons/time.png" type="image/svg+xml" />
   </head>
   <body>
+    <div class="header-text">
+      <h1>📆 PEER REVIEW GUIDE</h1>
+    </div>
     <form
       class="center"
       action="submit_review.php"
       method="POST"
       enctype="multipart/form-data"
     >
-      <div class="header-text">
-        <h1>📆 Peer Review Guide</h1>
-      </div>
       <div class="prInfo-div">
         <div class="task-name">
           <label for="taskName">Task Name </label
@@ -86,7 +86,7 @@
           data-bs-toggle="modal"
           data-bs-target="#confirmationModal"
         >
-          <i class="bi bi-send"></i> Submit Review
+          Submit Review
         </button>
       </div>
       <!-- Confirmation Modal -->
@@ -128,7 +128,6 @@
                 type="button"
                 class="btn btn-primary"
                 id="confirmProceedBtn"
-                onclick="sendEmail()"
               >
                 Proceed
               </button>
