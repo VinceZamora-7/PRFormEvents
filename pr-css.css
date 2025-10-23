@@ -3,7 +3,7 @@
 :root {
   --primary: #547792;
   --background: #213448;
-  --specialBG: #ecefca;
+  --specialBG: #eff0ec;
   --focus: #94b4c1;
   --text-main: #ecefca;
   --text-secondary: #17252a;
@@ -318,14 +318,14 @@ input[type="radio"]:focus-visible {
   transition: all 0.3s ease;
   pointer-events: none;
 }
-.input-container input[type="textarea"]:focus ~ .label,
+.input-container input[type="text"]:focus ~ .label,
 .input-container input[type="text"]:valid ~ .label {
   position: absolute;
   top: -15px;
   left: 5px;
   color: #000000;
 }
-.input-container input[type="textarea"] {
+.input-container input[type="text"] {
   border-top: none;
   border-right: none;
   border-left: none;
@@ -363,6 +363,17 @@ input[type="radio"]:focus-visible {
   justify-content: end;
   margin-right: 20px !important;
   margin-top: 20px;
+}
+.sendBtn .btn-send {
+  background-color: var(--primary);
+  color: var(--text-main);
+  border-radius: 50px;
+  box-shadow: inset 1px 3px 3px #ffffffbd, inset -4px -4px 3px #00000046;
+}
+.sendBtn .btn-send:hover {
+  box-shadow: inset -2px -2px 4px #ffffff,
+    inset 2px 2px 4px rgba(0, 0, 0, 0.356);
+  color: #fff;
 }
 @media (max-width: 767px) {
   .na-options {
