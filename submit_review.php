@@ -13,26 +13,39 @@ if ($mysqli->connect_error) {
 // 2. Collect answers dynamically
 $answers = [];
 foreach ($_POST as $key => $value) {
-    if (strpos($key, 'q') === 0 || strpos($key, 'fatality') === 0) {
+    if (strpos($key, 'q') === 0 || strpos($key, 'fatality') === 0 || strpos($key, 'remarks') === 0) {
         $answers[$key] = $value;
     }
 }
 
-// 3. Handle file uploads
+
+// 3. Handle file uploads grouped by question
 $imagePaths = [];
 $uploadDir = 'uploads/';
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
 
-foreach ($_FILES as $file) {
-    if ($file['error'] === UPLOAD_ERR_OK) {
-        $filename = uniqid() . "_" . basename($file['name']);
-        $targetFile = $uploadDir . $filename;
-        move_uploaded_file($file['tmp_name'], $targetFile);
-        $imagePaths[] = $filename;
+foreach ($_FILES as $inputName => $fileArray) {
+    // Match inputs like image_q1, image_q2, etc.
+    if (preg_match('/^image_q(\d+)$/', $inputName, $matches)) {
+        $qId = $matches[1];
+        $imagePaths['q' . $qId] = [];
+
+        $filesCount = count($fileArray['name']);
+
+        for ($i = 0; $i < $filesCount; $i++) {
+            if ($fileArray['error'][$i] === UPLOAD_ERR_OK) {
+                $filename = uniqid() . "_" . basename($fileArray['name'][$i]);
+                $targetFile = $uploadDir . $filename;
+                if (move_uploaded_file($fileArray['tmp_name'][$i], $targetFile)) {
+                    $imagePaths['q' . $qId][] = $filename;
+                }
+            }
+        }
     }
 }
+
 
 // 4. Generate PRID dynamically by fetching all pr_id and finding max number
 $result = $mysqli->query("SELECT pr_id FROM pr_submissions");
