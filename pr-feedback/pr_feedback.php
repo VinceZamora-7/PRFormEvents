@@ -59,19 +59,22 @@ $mysqli->close();
         <h1>Peer Review Feedback</h1>
         <p>Review the submitted feedback and responses.</p>
     </header>
+    
+    <!-- Search Form -->
+     <?php if (!$pr_id): ?>
+    <form method="GET" action="pr_feedback.php" class="search-form">
+        <div class="input-group">
+            <input type="text" name="pr_id" class="search-input" placeholder="Enter PRID" value="<?= htmlspecialchars($pr_id ?? '') ?>" required>
+            <button class="search-btn" type="submit">Search</button>
+        </div>
+    </form>
+    <?php endif; ?>
 
     <!-- Conditionally display the Back button -->
     <?php if ($pr_id): ?>
         <a href="pr_feedback.php" class="btn btn-secondary mb-4">Back to All Feedback</a>
     <?php endif; ?>
 
-    <!-- Search Form -->
-    <form method="GET" action="pr_feedback.php" class="search-form">
-        <div class="input-group">
-            <input type="number" name="pr_id" class="search-input" placeholder="Enter PRID" value="<?= htmlspecialchars($pr_id ?? '') ?>" required>
-            <button class="search-btn" type="submit">Search</button>
-        </div>
-    </form>
 
     <!-- Feedback Content -->
     <?php if ($pr_id): ?>
@@ -79,14 +82,13 @@ $mysqli->close();
             <!-- Display Feedback Card -->
             <div class="feedback-card">
                 <div class="taskInfo">
-                    <h3><strong>Task Name:</strong> <?= htmlspecialchars($feedback['task_name']) ?></h3>
+                    <h3><strong><?= htmlspecialchars($feedback['task_name']) ?></strong> </h3>
                     <p><strong><?= htmlspecialchars($feedback['pr_id']) ?></strong></p>
                     <p><strong>Peer Reviewer:</strong> <?= htmlspecialchars($feedback['peer_reviewer_name']) ?> (<?= htmlspecialchars($feedback['peer_reviewer_email']) ?>)</p>
                     <p><strong>Builder:</strong> <?= htmlspecialchars($feedback['builder_name']) ?> (<?= htmlspecialchars($feedback['builder_email']) ?>)</p>
                     <p><strong>Date:</strong> <?= htmlspecialchars($feedback['submission_date']) ?></p>
-                    <p><strong>Status:</strong> <?= htmlspecialchars($feedback['status']) ?></p>
+                    <p><strong>Status:</strong> <span id="prStatus"><?= htmlspecialchars($feedback['status']) ?></span></p>
                 </div>
-
                 <!-- Questions and Answers Section -->
                 <h4>Feedback</h4>
                 <ul>
@@ -100,40 +102,55 @@ $mysqli->close();
                             $answer_key = 'q' . $question_id;
                             $answer = isset($answers[$answer_key]) && !empty($answers[$answer_key]) ? $answers[$answer_key] : null;
                             
-                            // Display the question and answer only if the answer exists and is not 'Not Applicable'
+                            // Display question and answer only if answer exists and is not 'Not Applicable'
                             if ($answer && strtolower($answer) !== 'not applicable') {
                                 echo "<li><strong>" . htmlspecialchars($question_text) . "</strong><br>";
                                 echo "<strong>Answer:</strong> " . htmlspecialchars($answer);
                                 
-                                // Check if the answer is "Applicable" and display Fatality and Remarks options
+                                // If answer is "Applicable", show Fatality and Remarks
                                 if (strtolower($answer) === "applicable") {
-                                    // Display Fatality Status
-                                    $fatality = isset($answers['fatality_' . $question_id]) ? $answers['fatality_' . $question_id] : 'Not specified';
-                                    echo "<br><strong>Fatality:</strong> " . htmlspecialchars($fatality);
+                                    // Fatality key
+                                    $fatality_key = 'fatality' . $question_id;
+                                    $fatality = isset($answers[$fatality_key]) ? $answers[$fatality_key] : null;
 
-                                    // Display Remarks
-                                    $remarks = isset($answers['remarks_' . $question_id]) ? $answers['remarks_' . $question_id] : 'No remarks provided';
+                                    if ($fatality === 'fatal') {
+                                        $fatality_display = "<span class='highlight'>Fatal Error</span>";
+                                    } elseif ($fatality === 'nonFatal') {
+                                        $fatality_display = "Non-Fatal Error";
+                                    } else {
+                                        $fatality_display = "Not specified";
+                                    }
+
+                                    echo "<br><strong>Fatality:</strong> " . $fatality_display;
+
+                                    // Remarks key
+                                    $remarks_key = 'remarks' . $question_id;
+                                    $remarks = isset($answers[$remarks_key]) ? $answers[$remarks_key] : 'No remarks provided';
                                     echo "<br><strong>Remarks:</strong> " . htmlspecialchars($remarks);
                                 }
-                                
-                                // Fetch and display associated images for this question (if available)
+
+                                // Show images for the current question only
                                 echo "<br><strong>Proof:</strong><br>";
                                 $images = isset($feedback['image_paths']) ? json_decode($feedback['image_paths'], true) : [];
-                                if ($images) {
-                                    foreach ($images as $image) {
-                                        echo "<img src='uploads/$image' class='img-thumbnail' alt='Uploaded Image' />";
+                                $qKey = 'q' . $question_id;
+
+                                if (isset($images[$qKey]) && count($images[$qKey]) > 0) {
+                                    foreach ($images[$qKey] as $image) {
+                                        $imagePath = '../uploads/' . htmlspecialchars($image);  // Adjusted relative path
+                                        echo "<img src='{$imagePath}' class='img-thumbnail' alt='Uploaded Image' style='max-width:150px; margin:5px;' />";
                                     }
                                 } else {
                                     echo "<p>No images uploaded.</p>";
                                 }
-                                
+
                                 echo "</li><hr>";
                             }
                         }
                     ?>
+
                 </ul>
                 <?php if ($feedback['status'] !== 'Completed'): ?>
-                    <div class="action">
+                    <div id="actionButtons" class="action">
                         <button
                             type="button"
                             class="btn btn-danger"
@@ -165,7 +182,7 @@ $mysqli->close();
                 <thead>
                     <tr>
                         <th>PRID</th>
-                        <th>Submitted By</th>
+                        <th>Task Name</th>
                         <th>Status</th>
                         <th>Submission Date</th>
                         <th>Actions</th>
@@ -175,7 +192,7 @@ $mysqli->close();
                     <?php while ($feedback = $result->fetch_assoc()): ?>
                         <tr>
                             <td><?= htmlspecialchars($feedback['pr_id']) ?></td>
-                            <td><?= htmlspecialchars($feedback['submitter_email']) ?></td>
+                            <td><?= htmlspecialchars($feedback['task_name']) ?></td>
                             <td><?= htmlspecialchars($feedback['status']) ?></td>
                             <td><?= htmlspecialchars($feedback['submission_date']) ?></td>
                             <td>
@@ -196,7 +213,7 @@ document.getElementById('sendEmailBtn').addEventListener('click', function () {
   const prId = urlParams.get("pr_id");
 
   const taskName = <?= json_encode($feedback['task_name'] ?? '') ?>;
-  const builderEmail = <?= json_encode($feedback['builder_email'] ?? '') ?>;
+  const builderEmail = <?= json_encode(filter_var($feedback['builder_email'] ?? '', FILTER_SANITIZE_EMAIL)) ?>;
 
   if (!prId || !taskName || !builderEmail) {
     alert("Missing required fields.");
@@ -204,7 +221,7 @@ document.getElementById('sendEmailBtn').addEventListener('click', function () {
   }
 
   let bodyText =
-    `Peer Review Answers:\n\n` +
+    `Peer Review Feedback:\n\n` +
     `Hope you're doing well!\n\n` +
     `Task Name: ${taskName}\n\n` +
     `I've noticed that there are some errors\n` +
@@ -227,15 +244,18 @@ document.getElementById('accept').addEventListener('click', function () {
     return;
   }
 
-  // Send an AJAX request to update the status in the database
   const xhr = new XMLHttpRequest();
   xhr.open('POST', 'update_status.php', true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  
+
   xhr.onload = function () {
     if (xhr.status === 200) {
-      // On success, reload the page or update the status on the page
-      document.querySelector('p strong').textContent = 'Completed'; // Update the status text on the page
+      document.getElementById('prStatus').textContent = 'Completed';
+
+      const buttonsContainer = document.getElementById('actionButtons');
+      if (buttonsContainer) {
+        buttonsContainer.style.display = 'none';
+      }
     } else {
       alert("Failed to update the status.");
     }
@@ -243,6 +263,8 @@ document.getElementById('accept').addEventListener('click', function () {
 
   xhr.send('pr_id=' + encodeURIComponent(prId) + '&status=Completed');
 });
+
+
 </script>
 
 
