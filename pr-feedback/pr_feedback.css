@@ -102,9 +102,6 @@ p {
   margin-bottom: 10px;
   border-radius: 8px;
 }
-.feedback-card * {
-  outline: 1px solid red;
-}
 .emailBtn {
   display: flex;
   align-items: center; /* vertically center */
@@ -163,4 +160,7 @@ p {
 
 .btn-view-feedback:hover {
   background-color: #0056b3;
+}
+.highlight {
+  color: red;
 }
