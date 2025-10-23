@@ -556,7 +556,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const nfInput = document.createElement("input");
         nfInput.type = "radio";
         nfInput.id = `nonFatal${q.id}`;
-        nfInput.name = `fatality${q.id}`;
+        nfInput.name = `fatality${q.id}`; // UPDATED here
+        nfInput.value = "nonFatal";
         nfLabel.appendChild(nfInput);
         nfLabel.appendChild(createSpan("Non-Fatal", "non-fatal"));
 
@@ -565,7 +566,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const fInput = document.createElement("input");
         fInput.type = "radio";
         fInput.id = `fatal${q.id}`;
-        fInput.name = `fatality${q.id}`;
+        fInput.name = `fatality${q.id}`; // UPDATED here
+        fInput.value = "fatal";
         fLabel.appendChild(fInput);
         fLabel.appendChild(createSpan("Fatal", "fatal"));
 
@@ -585,9 +587,9 @@ document.addEventListener("DOMContentLoaded", function () {
         inputContainer.className = "input-container";
 
         const remarksInput = document.createElement("input");
-        remarksInput.type = "textarea";
+        remarksInput.type = "text";
         remarksInput.id = `remarks${q.id}`;
-        remarksInput.name = `remarks${q.id}`;
+        remarksInput.name = `remarks${q.id}`; // UPDATED here
         remarksInput.required = true;
 
         const remarksLabel = document.createElement("label");
@@ -605,8 +607,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const imageUpload = document.createElement("input");
         imageUpload.type = "file";
         imageUpload.id = `imageUpload${q.id}`;
-        imageUpload.name = `image${q.id}`;
+        imageUpload.name = `image_q${q.id}[]`; // Important: make it an array for multiple files per question
         imageUpload.accept = "image/*";
+        imageUpload.multiple = true;
 
         proofDiv.appendChild(inputContainer);
         proofDiv.appendChild(imageUpload);
